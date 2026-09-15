@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verification Complete</title>
+<style>
+  body{background:#0F0F12;color:#fff;font-family:-apple-system,sans-serif;
+       text-align:center;padding:60px 24px;margin:0}
+  .ok{font-size:60px;margin-bottom:12px}
+  h1{color:#22C55E;font-size:22px;margin-bottom:8px}
+  p{color:#9A9AA5;font-size:14px;line-height:1.6;margin:6px 0}
+  .btn{display:inline-block;margin-top:28px;padding:16px 40px;background:#4C7EFF;
+       color:#fff;text-decoration:none;border-radius:12px;font-weight:bold;
+       font-size:15px;box-shadow:0 8px 20px rgba(76,126,255,.4);border:none;
+       cursor:pointer}
+  .hint{color:#8AB4FF;font-size:12px;margin-top:20px}
+  .copy-status{color:#22C55E;font-size:12px;margin-top:8px;height:16px}
+</style>
+</head>
+<body>
+  <div class="ok">✅</div>
+  <h1>Verification Complete</h1>
+  <p>Verifikasi kamu berhasil.</p>
+  <p>Kembali ke aplikasi untuk melanjutkan.</p>
+
+  <button class="btn" onclick="doCopyAndReturn()">
+    KEMBALI KE APLIKASI
+  </button>
+
+  <div class="copy-status" id="st"></div>
+  <div class="hint">Token verifikasi disimpan otomatis ke clipboard.</div>
+
+  <script>
+    // token berisi timestamp saat halaman dibuka
+    var VERIFY_TOKEN = "BIMZVERIFY:" + Date.now();
+
+    function doCopyAndReturn() {
+      // copy token ke clipboard
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = VERIFY_TOKEN;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, 999999);
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        document.getElementById("st").innerText = "✅ Token tersimpan. Silakan kembali ke app.";
+      } catch(e) {
+        document.getElementById("st").innerText = "⚠️ Copy gagal — copy manual: " + VERIFY_TOKEN;
+      }
+
+      // coba buka app via deep link (kalau terdaftar)
+      setTimeout(function() {
+        window.location.href = "bimzmodz://verify";
+      }, 400);
+    }
+
+    // auto-copy saat halaman dibuka (biar user gak perlu klik untuk copy)
+    window.onload = function() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = VERIFY_TOKEN;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, 999999);
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        document.getElementById("st").innerText = "✅ Token tersimpan otomatis.";
+      } catch(e) {}
+    };
+  </script>
+</body>
+</html>
